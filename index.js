@@ -8,6 +8,14 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket){
     console.log('a user connected');
+    socket.emit('message', { some: 'data' });
+
+    socket.on('new-message', function(data){
+        console.log('message recieved');
+        socket.emit('message', data);
+    });
+
+
 });
 
 http.listen(3000, function(){

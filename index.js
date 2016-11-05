@@ -2,6 +2,8 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var count = 0;
+
 app.get('/', function(req, res){
     res.sendfile('index.html');
 });
@@ -13,9 +15,19 @@ io.on('connection', function(socket){
     socket.emit('message', { some: 'data' });
 
     socket.on('new-message', function(data){
-        console.log('message recieved');
+        console.log(data);
         socket.emit('message', data);
     });
+
+    setInterval(function() {
+        socket.emit('count', count++);
+        console.log(count);
+    }, 2000);
+
+    setInterval(function() {
+        socket.emit('message', 'message ' + count);
+        console.log(count);
+    }, 10000);
 
 
 });
